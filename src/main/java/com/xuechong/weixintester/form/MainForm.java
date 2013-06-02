@@ -1,6 +1,10 @@
 
 package com.xuechong.weixintester.form;
 
+import javax.swing.JTextPane;
+
+import com.xuechong.weixintester.core.Processor;
+
 /**
  * @author xuechong
  */
@@ -196,10 +200,13 @@ public class MainForm extends javax.swing.JFrame {
 	//GEN-END:initComponents
 
 	private void btnGoActionPerformed(java.awt.event.ActionEvent evt) {
-		this.content.setText(this.content.getText() + "\r\nnew line");
+		this.clearContents();
+		if (!this.isProcessing) {
+			new Thread(new Processor(this)).start();
+		}
 	}
 
-	public static void main(String args[]) {
+	public static void main(String args[]) {//TODO
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				new MainForm().setVisible(true);
@@ -207,10 +214,50 @@ public class MainForm extends javax.swing.JFrame {
 		});
 	}
 
+	public void clearContents(){
+		this.content.setText("");
+	}
 	
+	public void appendStr(String content){
+		synchronized(this.content){
+			this.content.setText(this.content.getText());
+		}
+	}
+	
+	public void appendNewLine(String content){
+		this.appendStr("\r\n"+content);
+	}
+	public synchronized void notifyDone(){
+		this.isProcessing = false;
+	}
+	///////////////
+	////get set//////
+	//////////////
+	public JTextPane getContentPane(){
+		return this.content;
+	}
+	public javax.swing.JTextField getInputQuestion() {
+		return inputQuestion;
+	}
+	public void setInputQuestion(javax.swing.JTextField inputQuestion) {
+		this.inputQuestion = inputQuestion;
+	}
+	public javax.swing.JTextField getInputToken() {
+		return inputToken;
+	}
+	public void setInputToken(javax.swing.JTextField inputToken) {
+		this.inputToken = inputToken;
+	}
+	public javax.swing.JTextField getInputUrl() {
+		return inputUrl;
+	}
+	public void setInputUrl(javax.swing.JTextField inputUrl) {
+		this.inputUrl = inputUrl;
+	}
 	/////////////
 	////private/////
 	////////////////
+	private volatile boolean isProcessing = false; 
 	private javax.swing.JButton btnGo;
 	private javax.swing.JTextPane content;
 	private javax.swing.JMenu helpMenu;
