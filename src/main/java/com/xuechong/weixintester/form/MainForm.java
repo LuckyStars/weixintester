@@ -236,9 +236,6 @@ public class MainForm extends javax.swing.JFrame {
 	// /////////////
 	// //get set//////
 	// ////////////
-	public JTextPane getContentPane() {
-		return this.content;
-	}
 
 	public javax.swing.JTextField getInputQuestion() {
 		return inputQuestion;

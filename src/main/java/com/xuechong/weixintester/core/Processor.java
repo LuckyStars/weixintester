@@ -9,6 +9,8 @@ import java.net.URLConnection;
 
 import com.xuechong.weixintester.form.MainForm;
 
+
+
 public class Processor implements Runnable {
 
 	private static final String VAL = "vali";
