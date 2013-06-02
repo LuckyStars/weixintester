@@ -1,4 +1,3 @@
-
 package com.xuechong.weixintester.form;
 
 import javax.swing.JTextPane;
@@ -16,6 +15,8 @@ public class MainForm extends javax.swing.JFrame {
 		initComponents();
 	}
 
+	//GEN-BEGIN:initComponents
+	// <editor-fold defaultstate="collapsed" desc="Generated Code">
 	private void initComponents() {
 
 		btnGo = new javax.swing.JButton();
@@ -206,7 +207,7 @@ public class MainForm extends javax.swing.JFrame {
 		}
 	}
 
-	public static void main(String args[]) {//TODO
+	public static void main(String args[]) {// TODO
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				new MainForm().setVisible(true);
@@ -214,50 +215,59 @@ public class MainForm extends javax.swing.JFrame {
 		});
 	}
 
-	public void clearContents(){
+	public void clearContents() {
 		this.content.setText("");
 	}
-	
-	public void appendStr(String content){
-		synchronized(this.content){
+
+	public void appendStr(String content) {
+		synchronized (this.content) {
 			this.content.setText(this.content.getText());
 		}
 	}
-	
-	public void appendNewLine(String content){
-		this.appendStr("\r\n"+content);
+
+	public void appendNewLine(String content) {
+		this.appendStr("\r\n" + content);
 	}
-	public synchronized void notifyDone(){
+
+	public synchronized void notifyDone() {
 		this.isProcessing = false;
 	}
-	///////////////
-	////get set//////
-	//////////////
-	public JTextPane getContentPane(){
+
+	// /////////////
+	// //get set//////
+	// ////////////
+	public JTextPane getContentPane() {
 		return this.content;
 	}
+
 	public javax.swing.JTextField getInputQuestion() {
 		return inputQuestion;
 	}
+
 	public void setInputQuestion(javax.swing.JTextField inputQuestion) {
 		this.inputQuestion = inputQuestion;
 	}
+
 	public javax.swing.JTextField getInputToken() {
 		return inputToken;
 	}
+
 	public void setInputToken(javax.swing.JTextField inputToken) {
 		this.inputToken = inputToken;
 	}
+
 	public javax.swing.JTextField getInputUrl() {
 		return inputUrl;
 	}
+
 	public void setInputUrl(javax.swing.JTextField inputUrl) {
 		this.inputUrl = inputUrl;
 	}
-	/////////////
-	////private/////
-	////////////////
-	private volatile boolean isProcessing = false; 
+
+	// ///////////
+	// //private/////
+	// //////////////
+	private volatile boolean isProcessing = false;
 	private javax.swing.JButton btnGo;
 	private javax.swing.JTextPane content;
 	private javax.swing.JMenu helpMenu;
@@ -269,5 +279,5 @@ public class MainForm extends javax.swing.JFrame {
 	private javax.swing.JLabel jLabel3;
 	private javax.swing.JScrollPane jScrollPane1;
 	private javax.swing.JMenuBar menuBar;
-	
+
 }

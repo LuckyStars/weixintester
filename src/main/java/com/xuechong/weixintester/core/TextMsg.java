@@ -1,6 +1,5 @@
 package com.xuechong.weixintester.core;
 
-import org.apache.commons.lang3.StringUtils;
 
 public class TextMsg {
 	public static final String XML = 
@@ -21,6 +20,7 @@ public class TextMsg {
 	
 	private String xml ;
 	public TextMsg(String toUser,String fromUser,String createTime, String content,String msgId){
+		super();
 		this.xml = XML;
 		this.setProperty(TO_USER, StringUtils.isNotBlank(toUser)?toUser:"touser");
 		this.setProperty(FROM_USER,StringUtils.isNotBlank(fromUser)?fromUser:"fromUser");
@@ -29,8 +29,14 @@ public class TextMsg {
 		this.setProperty(CONTENT, StringUtils.isNotBlank(content)?content:"content");
 		this.setProperty(CREATE_TIME, StringUtils.isNotBlank(createTime)?createTime:"1348831860");
 	}
-	
+	public static TextMsg simpleTextMsg(String content){
+		return new TextMsg(null,null,null,content,null);
+	}
 	private void setProperty(String key,String value){
 		this.xml = this.xml.replace(key, value);
+	}
+	@Override
+	public String toString() {
+		return this.xml.toString();
 	}
 }
