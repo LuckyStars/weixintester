@@ -6,10 +6,16 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 import com.xuechong.weixintester.form.MainForm;
-
-
 
 public class Processor implements Runnable {
 
@@ -44,6 +50,7 @@ public class Processor implements Runnable {
 			URL url = new URL(this.mainForm.getInputUrl().getText());
 			con = url.openConnection();
 			con.setDoOutput(true);
+			con.setDoInput(true);
 			con.setRequestProperty("Pragma:", "no-cache");
 			con.setRequestProperty("Cache-Control", "no-cache");
 			con.setRequestProperty("Content-Type", "text/xml");
@@ -70,8 +77,31 @@ public class Processor implements Runnable {
 		}
 	}
 
-	private void vali() {
-		// TODO Auto-generated method stub
+	private void vali() throws NoSuchAlgorithmException {
+		List<String> list = new ArrayList<String>();
+		String timestamp,nonce,token,echostr;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
+		
+		token = mainForm.getInputToken().getText();
+		timestamp = sdf.format(new Date());
+		Double non = Math.random()*99999;
+		nonce = String.valueOf(non.intValue());
+		echostr = UUID.randomUUID().toString();
+		
+		list.add(token);
+		list.add(timestamp);
+		list.add(nonce);
+		
+		Collections.sort(list);
+		
+		StringBuilder joinstr = new StringBuilder();
+		for (String string : list) {
+			joinstr.append(string);
+		}
+		
+		MessageDigest md = MessageDigest.getInstance("SHA-1");
+		md.update(joinstr.toString().getBytes());
+		byte[] signature = md.digest();
 		
 	}
 
