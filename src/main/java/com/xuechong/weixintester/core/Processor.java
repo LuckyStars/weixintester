@@ -57,7 +57,7 @@ public class Processor implements Runnable {
 			out = new OutputStreamWriter(con.getOutputStream());
 			String xm = TextMsg.simpleTextMsg(
 					this.mainForm.getInputQuestion().getText()).toString();
-			this.mainForm.appendNewLine(xm);
+			this.mainForm.appendNewLine(new String(xm.getBytes("UTF-8")));
 			out.write(new String(xm.getBytes("UTF-8")));
 			out.flush();
 			
@@ -66,7 +66,7 @@ public class Processor implements Runnable {
 			this.mainForm.appendNewLine("response is :");
 			String line = "";
 			for (line = br.readLine(); line != null; line = br.readLine()) {
-				this.mainForm.appendNewLine(line);
+				this.mainForm.appendNewLine(new String(line.getBytes("utf-8")));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

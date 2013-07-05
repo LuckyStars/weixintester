@@ -49,6 +49,7 @@ public class MainForm extends javax.swing.JFrame {
 
 		content.setEditable(false);
 		content.setVisible(true);
+		
 		jScrollPane1.setViewportView(content);
 
 		inputQuestion.setText("question");
