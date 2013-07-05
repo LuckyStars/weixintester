@@ -1,6 +1,5 @@
 package com.xuechong.weixintester.form;
 
-import javax.swing.JTextPane;
 
 import com.xuechong.weixintester.core.Processor;
 
@@ -40,7 +39,7 @@ public class MainForm extends javax.swing.JFrame {
 			}
 		});
 
-		inputUrl.setText("url");
+		inputUrl.setText("http://127.0.0.1:8080/test");
 
 		inputToken.setText("token");
 
@@ -49,6 +48,7 @@ public class MainForm extends javax.swing.JFrame {
 		jLabel2.setText("token");
 
 		content.setEditable(false);
+		content.setVisible(true);
 		jScrollPane1.setViewportView(content);
 
 		inputQuestion.setText("question");
@@ -221,7 +221,7 @@ public class MainForm extends javax.swing.JFrame {
 
 	public void appendStr(String content) {
 		synchronized (this.content) {
-			this.content.setText(this.content.getText());
+			this.content.setText(this.content.getText() + content);
 		}
 	}
 
