@@ -20,6 +20,7 @@ import com.xuechong.weixintester.form.MainForm;
 public class Processor implements Runnable {
 
 	private static final String VAL = "vali";
+	private static final String EVENT_KEY = "event_";
 
 	private MainForm mainForm;
 
@@ -30,8 +31,10 @@ public class Processor implements Runnable {
 	@Override
 	public void run() {
 		try {
-			if (this.mainForm.getInputQuestion().equals(VAL)) {// 验证接入
+			if (this.mainForm.getInputQuestion().getText().equals(VAL)) {// 验证接入
 				vali();
+			} else if (this.mainForm.getInputQuestion().getText().equals(EVENT_KEY)){
+				handleEvent();
 			} else {// 处理消息
 				postXml();
 			}
@@ -47,6 +50,7 @@ public class Processor implements Runnable {
 		URLConnection con=null;
 		BufferedReader br = null;
 		try {
+			
 			URL url = new URL(this.mainForm.getInputUrl().getText());
 			con = url.openConnection();
 			con.setDoOutput(true);
@@ -55,6 +59,7 @@ public class Processor implements Runnable {
 			con.setRequestProperty("Cache-Control", "no-cache");
 			con.setRequestProperty("Content-Type", "text/xml");
 			out = new OutputStreamWriter(con.getOutputStream());
+			
 			String xm = TextMsg.simpleTextMsg(
 					this.mainForm.getInputQuestion().getText()).toString();
 			this.mainForm.appendNewLine(new String(xm.getBytes("UTF-8")));
@@ -68,6 +73,7 @@ public class Processor implements Runnable {
 			for (line = br.readLine(); line != null; line = br.readLine()) {
 				this.mainForm.appendNewLine(new String(line.getBytes("utf-8")));
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			this.mainForm.appendNewLine(e.toString());
@@ -78,6 +84,7 @@ public class Processor implements Runnable {
 	}
 
 	private void vali() throws NoSuchAlgorithmException {
+		
 		List<String> list = new ArrayList<String>();
 		String timestamp,nonce,token,echostr;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
@@ -102,6 +109,12 @@ public class Processor implements Runnable {
 		MessageDigest md = MessageDigest.getInstance("SHA-1");
 		md.update(joinstr.toString().getBytes());
 		byte[] signature = md.digest();
+		
+	}
+	
+	private void handleEvent(){
+		String eventKey = this.mainForm.getInputQuestion().getText().toString().replaceFirst(EVENT_KEY, "");
+		
 		
 	}
 
