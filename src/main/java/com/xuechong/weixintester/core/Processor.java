@@ -1,6 +1,7 @@
 package com.xuechong.weixintester.core;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -109,6 +110,15 @@ public class Processor implements Runnable {
 		MessageDigest md = MessageDigest.getInstance("SHA-1");
 		md.update(joinstr.toString().getBytes());
 		byte[] signature = md.digest();
+		
+		StringBuilder sha = new StringBuilder();
+		for (byte b : signature) {
+			//sha.append(Integer.toHexString(new Byte(b).intValue()) + "    ");
+			sha.append(Byte.toString(b));
+		}
+		
+		
+		
 		
 	}
 	
