@@ -1,7 +1,6 @@
 package com.xuechong.weixintester.core;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -14,9 +13,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import com.xuechong.weixintester.form.MainForm;
+import com.xuechong.weixintester.utils.UrlConnectionUtil;
+import com.xuechong.weixintester.utils.UrlConnectionUtil.Parameter;
 
 public class Processor implements Runnable {
 
@@ -84,17 +84,21 @@ public class Processor implements Runnable {
 		}
 	}
 
-	private void vali() throws NoSuchAlgorithmException {
+	/**
+	 * 验证接入
+	 * @throws NoSuchAlgorithmException
+	 * @throws IOException
+	 */
+	@SuppressWarnings("serial")
+	private void vali() throws NoSuchAlgorithmException, IOException {
 		
 		List<String> list = new ArrayList<String>();
-		String timestamp,nonce,token,echostr;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
 		
-		token = mainForm.getInputToken().getText();
-		timestamp = sdf.format(new Date());
+		final String token = mainForm.getInputToken().getText();
+		final String timestamp = sdf.format(new Date());
 		Double non = Math.random()*99999;
-		nonce = String.valueOf(non.intValue());
-		echostr = UUID.randomUUID().toString();
+		final String nonce = String.valueOf(non.intValue());
 		
 		list.add(token);
 		list.add(timestamp);
@@ -109,17 +113,45 @@ public class Processor implements Runnable {
 		
 		MessageDigest md = MessageDigest.getInstance("SHA-1");
 		md.update(joinstr.toString().getBytes());
-		byte[] signature = md.digest();
+		byte[] digest = md.digest();
 		
 		StringBuilder sha = new StringBuilder();
-		for (byte b : signature) {
-			//sha.append(Integer.toHexString(new Byte(b).intValue()) + "    ");
-			sha.append(Byte.toString(b));
+		for (byte b : digest) {
+			String hexValue = Integer.toHexString(b >= 0 ? b : 256 + b);
+			if(hexValue.length()<2){
+				hexValue = "0" + hexValue;
+			}
+			sha.append(hexValue);
 		}
 		
+		final String signature = sha.toString();
+		List<UrlConnectionUtil.Parameter> params = 
+			new ArrayList<UrlConnectionUtil.Parameter>(){{
+			add(Parameter.newInstance("token", token));
+			add(Parameter.newInstance("timestamp", timestamp));
+			add(Parameter.newInstance("nonce", nonce));
+			add(Parameter.newInstance("signature", signature));
+			add(Parameter.newInstance("echostr", "vali ok"));
+		}};
 		
-		
-		
+		URL url = new URL(this.mainForm.getInputUrl().getText() + "?" + UrlConnectionUtil.buildParameterStr(params));
+		URLConnection con = url.openConnection();
+		con.connect();
+		StringBuilder resp = new StringBuilder();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				con.getInputStream()));
+		try {
+			for (String line = reader.readLine(); line != null; line = reader
+					.readLine()) {
+				resp.append(line);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (reader != null)
+				reader.close();
+		}
+		this.mainForm.appendNewLine("result = " + resp.toString());
 	}
 	
 	private void handleEvent(){
