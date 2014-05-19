@@ -21,7 +21,8 @@ import com.xuechong.weixintester.utils.UrlConnectionUtil.Parameter;
 public class Processor implements Runnable {
 
 	private static final String VAL = "vali";
-	private static final String EVENT_KEY = "event_";
+	private static final String EVENT_CLICK_KEY = "click_";
+	private static final String EVENT_VIEW_KEY = "view_";
 
 	private MainForm mainForm;
 
@@ -32,11 +33,15 @@ public class Processor implements Runnable {
 	@Override
 	public void run() {
 		try {
-			if (this.mainForm.getInputQuestion().getText().equals(VAL)) {// 验证接入
+			String inputQuestion = this.mainForm.getInputQuestion().getText();
+			
+			if (inputQuestion.equals(VAL)) {// 验证接入
 				vali();
-			} else if (this.mainForm.getInputQuestion().getText().equals(EVENT_KEY)){
-				handleEvent();
-			} else {// 处理消息
+			} else if (inputQuestion.equals(EVENT_CLICK_KEY)){
+				handleClick();
+			} else if(inputQuestion.equals(EVENT_VIEW_KEY)){
+				handleView();
+			}else {// 处理消息
 				postXml();
 			}
 		} catch (Exception e) {
@@ -45,43 +50,26 @@ public class Processor implements Runnable {
 		this.mainForm.notifyDone();
 	}
 
+	private void handleView() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private void postXml() throws IOException {
+		
 		this.mainForm.appendNewLine("post xml");
-		OutputStreamWriter out = null;
-		URLConnection con=null;
-		BufferedReader br = null;
-		try {
-			
-			URL url = new URL(this.mainForm.getInputUrl().getText());
-			con = url.openConnection();
-			con.setDoOutput(true);
-			con.setDoInput(true);
-			con.setRequestProperty("Pragma:", "no-cache");
-			con.setRequestProperty("Cache-Control", "no-cache");
-			con.setRequestProperty("Content-Type", "text/xml");
-			out = new OutputStreamWriter(con.getOutputStream());
-			
-			String xm = TextMsg.simpleTextMsg(
-					this.mainForm.getInputQuestion().getText()).toString();
-			this.mainForm.appendNewLine(new String(xm.getBytes("UTF-8")));
-			out.write(new String(xm.getBytes("UTF-8")));
-			out.flush();
-			
-			br = new BufferedReader(new InputStreamReader(
-					con.getInputStream()));
-			this.mainForm.appendNewLine("response is :");
-			String line = "";
-			for (line = br.readLine(); line != null; line = br.readLine()) {
-				this.mainForm.appendNewLine(new String(line.getBytes("utf-8")));
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			this.mainForm.appendNewLine(e.toString());
-		}finally{
-			if(out!=null){out.close();}
-			if(br!=null){br.close();}
-		}
+		
+		String postUrl = this.mainForm.getInputUrl().getText();
+		String postXml = TextMsg.simpleTextMsg(
+				this.mainForm.getInputQuestion().getText()).toString();
+		
+		this.mainForm.appendNewLine(new String(postXml.getBytes("UTF-8")));
+		
+		String resp = Utils.postXml(postXml, postUrl);
+		
+		this.mainForm.appendNewLine("response is :");
+		this.mainForm.appendNewLine(resp);
+		
 	}
 
 	/**
@@ -125,6 +113,8 @@ public class Processor implements Runnable {
 		}
 		
 		final String signature = sha.toString();
+		
+		
 		List<UrlConnectionUtil.Parameter> params = 
 			new ArrayList<UrlConnectionUtil.Parameter>(){{
 			add(Parameter.newInstance("token", token));
@@ -154,8 +144,8 @@ public class Processor implements Runnable {
 		this.mainForm.appendNewLine("result = " + resp.toString());
 	}
 	
-	private void handleEvent(){
-		String eventKey = this.mainForm.getInputQuestion().getText().toString().replaceFirst(EVENT_KEY, "");
+	private void handleClick(){
+		String eventKey = this.mainForm.getInputQuestion().getText().toString().replaceFirst(EVENT_CLICK_KEY, "");
 		
 		
 	}
