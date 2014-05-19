@@ -15,13 +15,21 @@ public class EventMsg {
 	private String xml;
 	
 	public EventMsg (String toUser,String fromUser,String createTime, String event,String eventKey){
-		
-		
-		
+		this.xml = new String(XML);
+		this.setProperty("${toUser}", toUser);
+		this.setProperty("${fromUser}", fromUser);
+		this.setProperty("${CreateTime}", createTime);
+		this.setProperty("${event}", event);
+		this.setProperty("${eventKey}", eventKey);
 	}
 	
-	private void setProperty(String key,String value){
+	public void setProperty(String key,String value){
 		this.xml = this.xml.replace(key, value);
+	}
+	
+	@Override
+	public String toString() {
+		return this.xml.toString();
 	}
 	
 	

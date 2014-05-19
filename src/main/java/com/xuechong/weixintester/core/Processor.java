@@ -3,7 +3,6 @@ package com.xuechong.weixintester.core;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
@@ -50,16 +49,13 @@ public class Processor implements Runnable {
 		this.mainForm.notifyDone();
 	}
 
-	private void handleView() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 	private void postXml() throws IOException {
-		
 		this.mainForm.appendNewLine("post xml");
 		
 		String postUrl = this.mainForm.getInputUrl().getText();
+		
 		String postXml = TextMsg.simpleTextMsg(
 				this.mainForm.getInputQuestion().getText()).toString();
 		
@@ -72,6 +68,21 @@ public class Processor implements Runnable {
 		
 	}
 
+	private void handleView() {
+		// TODO Auto-generated method stub
+		String eventKey = this.mainForm.getInputQuestion().getText().toString().replaceFirst(EVENT_VIEW_KEY, "");
+		
+	}
+	
+	private void handleClick(){
+		String eventKey = this.mainForm.getInputQuestion().getText().toString().replaceFirst(EVENT_CLICK_KEY, "");
+		
+		
+		
+	}
+	
+	
+	
 	/**
 	 * 验证接入
 	 * @throws NoSuchAlgorithmException
@@ -142,12 +153,6 @@ public class Processor implements Runnable {
 				reader.close();
 		}
 		this.mainForm.appendNewLine("result = " + resp.toString());
-	}
-	
-	private void handleClick(){
-		String eventKey = this.mainForm.getInputQuestion().getText().toString().replaceFirst(EVENT_CLICK_KEY, "");
-		
-		
 	}
 
 }
