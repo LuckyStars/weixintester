@@ -1,6 +1,7 @@
 package com.xuechong.weixintester.core;
 
 public class EventMsg {
+	
 	private static final String XML = 
 		" <xml>"
 		+ "<ToUserName><![CDATA[${toUser}]]></ToUserName>"
@@ -10,7 +11,6 @@ public class EventMsg {
 		+ "<Event><![CDATA[${event}]]></Event>"
 		+ "<EventKey><![CDATA[${eventKey}]]></EventKey>" 
 		+ "</xml>";
-		
 	
 	private String xml;
 	
